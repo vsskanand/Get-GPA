@@ -1,0 +1,16 @@
+{
+"name": " Get GPA ",
+"description": "Mobile App for calculating GPA",
+"launch_path": "/welcome.html",
+"icons": {
+"128": "/icon3.png"
+},
+"orientation": [
+    "portrait"
+  ],
+"developer": {
+"name": "VSSKANAND",
+"url" : "http://vsskanandwordpress.com"
+},
+"default_locale": "en"
+}
