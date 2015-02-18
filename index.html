@@ -1,0 +1,412 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+"http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+
+<head>
+
+<title>Calculate your GPA</title>
+
+<meta charset="utf-8"/>
+
+<meta name="description" content="Calculate GPA on a 4.33 scale">   
+
+<style type="text/css">
+
+html{
+    width:100%;
+    height:100%;
+
+    font-family: 'Ubuntu', georgia;
+}
+
+
+input {
+    appearance: none;
+    outline: none;
+    border: 1px solid #bfbfbf;
+    border-radius: 3px;
+    padding: 5px;
+    margin: 1px;
+}
+
+ #header {  vertical-align: bottom; text-align: center;}
+
+  /*#header-content { bottom: 0; left: 0; top: 20;}*/
+
+ a {
+    font-family: 'Ubuntu', georgia;
+    text-align: center;
+    display:inline-block;
+        width: 110px;
+        height: 20px;
+        
+        border-radius: 35px;
+        box-sizing: border-box;
+        font-size: 14px;
+    padding-bottom: 0px;
+       
+        text-decoration: none;
+        color: black;
+        font-weight: bold;
+        font-family: arial;
+        text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+        position: relative;
+        box-shadow: 0 1px 0 rgba(255, 255, 255, 0.54) inset, 0 -2px 1px rgba(0, 0, 0, 0.31) inset;
+        background: #ffbf00;
+        background: -moz-linear-gradient(top,  #ffbf00 0%, #ff9700 100%);
+        background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffbf00), color-stop(100%,#ff9700));
+        background: -webkit-linear-gradient(top,  #ffbf00 0%,#ff9700 100%);
+        background: -o-linear-gradient(top,  #ffbf00 0%,#ff9700 100%);
+        background: -ms-linear-gradient(top,  #ffbf00 0%,#ff9700 100%);
+        background: linear-gradient(to bottom,  #ffbf00 0%,#ff9700 100%)
+          }
+
+  a:after {
+        content: '';
+        display: block;
+        background: #DFD3B9;
+        border-radius: 37px;
+        width: 120px;
+        height: 30px;
+        position: absolute;
+        top: -5px;
+        left: -5px;
+        z-index: -1;
+        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1) inset, 0 -1px 0 rgba(255, 255, 255, 0.59) inset;
+
+  }
+
+  a:hover {
+        background: #ffdc00;
+        background: -moz-linear-gradient(top,  #ffdc00 0%, #ffa700 100%);
+        background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffdc00), color-stop(100%,#ffa700));
+        background: -webkit-linear-gradient(top,  #ffdc00 0%,#ffa700 100%);
+        background: -o-linear-gradient(top,  #ffdc00 0%,#ffa700 100%);
+        background: -ms-linear-gradient(top,  #ffdc00 0%,#ffa700 100%);
+        background: linear-gradient(to bottom,  #ffdc00 0%,#ffa700 100%);
+        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffdc00', endColorstr='#ffa700',GradientType=0 );
+
+  }
+
+  a:active {
+    padding-top:10px;
+        background: #ff9100;
+        background: -moz-linear-gradient(top,  #ff9100 0%, #ffb300 100%);
+        background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ff9100), color-stop(100%,#ffb300));
+        background: -webkit-linear-gradient(top,  #ff9100 0%,#ffb300 100%);
+        background: -o-linear-gradient(top,  #ff9100 0%,#ffb300 100%);
+        background: -ms-linear-gradient(top,  #ff9100 0%,#ffb300 100%);
+        background: linear-gradient(to bottom,  #ff9100 0%,#ffb300 100%);
+        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ff9100', endColorstr='#ffb300',GradientType=0 );
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.32) inset, 0 -1px 0px white inset;
+  }
+
+
+
+body{
+
+background: #54647d; 
+  background: linear-gradient(#54647d, #54647d);
+  height: 100%;
+
+    max-width: 320px;
+    padding-left: 0px;
+    padding-right: 0px;
+    position: absolute;
+top:0;
+left:0;
+right:0;
+bottom:0;
+margin: auto;
+text-align: center;
+    
+}
+
+button{
+    text-align: center;
+}
+
+table{
+    text-align: center;
+}
+
+
+</style>
+
+
+<script>
+var Invalid = -1000;
+//Insert the input fields for a new class
+//into the table.
+function addNewClass() {
+    var tbody = document.getElementById("classes_tbody");
+    var newTr = document.createElement("tr");
+    for (var i = 0; i < 3; ++i) {
+        var td = document.createElement("td");
+        var input = document.createElement("input");
+        input.size = "9";
+        if (i != 0) {
+            input.setAttribute("onchange", "updateCreditsGpa()");
+        }
+        td.appendChild(input);
+        newTr.appendChild(td);
+    }
+    tbody.appendChild(newTr);
+}
+
+//Update the credits and GPA fields.
+function updateCreditsGpa() {
+    if (document.getElementById) {
+        var tbody = document.getElementById("classes_tbody");
+        var elements = tbody.getElementsByTagName("input");
+        updateCreditsGpaWith(elements);
+    }
+    else {
+        updateCreditsGpaWith(document.classes.elements);
+    }
+}
+
+//Convert the given float to a string of the closest
+//float with two or fewer places after the decimal.
+function formatDecimal(aFloat) {
+    var digits = "" + Math.round(100 * aFloat);
+    var length = digits.length;
+    if (length < 3) {
+        return "0." + digits;
+    }
+    else {
+        var dp = length - 2;
+        return digits.substring(0, dp) + "." + digits.substring(dp, length);
+    }
+}
+
+//Return the char of aString at index.
+//If index is invalid, the results are undefined.
+function charAt(aString, index) {
+    var length = aString.length;
+    return aString.substring(index, index + 1);
+}
+
+//Convert the given string to a float or return Invalid
+//if the given input is not recognized as credit hours.
+function toFloatOrInvalid(input) {
+    var length = input.length;
+    if (length == 0) {
+        return Invalid;
+    }
+    var first = charAt(input, 0);
+    if (first == "0") {
+        if (length == 1) {
+            return 0.0;
+        }
+        else if (charAt(input, 1) != ".") {
+            return Invalid;
+        }
+    }
+    else if ("123456789".indexOf(first) == -1) {
+        return Invalid;
+    }
+    var i = 1;
+    for (; i < length; ++i) {
+        var m = ".0123456789".indexOf(charAt(input, i));
+        if (m == -1) {
+            return Invalid;
+        }
+        else if (m == 0) {
+            break;
+        }
+    }
+    for (var j = i + 1; j < length; j++) {
+        if ("0123456789".indexOf(charAt(input, j)) == -1) {
+            return Invalid;
+        }
+    }
+    return parseFloat(input);
+}
+
+function updateCreditsGpaWith(elements) {
+    var totalGradedCredits = 0;
+    var totalUngradedCredits = 0;
+    var totalPoints = 0;
+    
+    var haveAtLeastOneGrade = false;
+    
+    var length = elements.length;
+    for (var i = 0; i < length; i += 3) {
+        var letter = elements[i + 2].value.toUpperCase();
+        if (letter == "X") {
+            continue;
+        }
+    
+        var creditsString = elements[i + 1].value;
+        if (creditsString == "") {
+            continue;
+        }
+        
+        var credits = toFloatOrInvalid(creditsString);
+        if (credits == Invalid) {
+            alert('Not a number: "' + creditsString + '"');
+            return;
+        }
+        
+        if (letter == "P" || letter == "T" || letter == "N") {
+            totalUngradedCredits += credits;
+            continue;
+        }
+        else {
+            totalGradedCredits += credits;
+        }        
+        
+        if (letter == "") {
+            continue;
+        }
+        var points = letterToPoints(letter);
+        if (points == Invalid) {
+            alert('Unrecognized letter grade: "' + letter + '"');
+            return;
+        }
+        haveAtLeastOneGrade = true;
+        
+        totalPoints += credits * points;
+    }
+    document.results.total_credits.value = totalGradedCredits + totalUngradedCredits;
+    if (haveAtLeastOneGrade && totalGradedCredits > 0) {
+        document.results.gpa.value = formatDecimal(totalPoints / totalGradedCredits);
+    }
+    else {
+        document.results.gpa.value = "";
+    }
+}
+
+//Return the points corresponding to the given letter
+//grade or Invalid if the input is invalid. The grade
+//is expected to be capitalized: A, B, etc.
+function letterToPoints(grade) {
+    if ("A+" == grade) {
+        return 4.33;
+    }
+    else if ("A" == grade) {
+        return 4.0;
+    }
+    else if ("A-" == grade) {
+        return 3.67;
+    }
+    else if ("B+" == grade) {
+        return 3.33;
+    }
+    else if ("B" == grade) {
+        return 3.0;
+    }
+    else if ("B-" == grade) {
+        return 2.67;
+    }
+    else if ("C+" == grade) {
+        return 2.33;
+    }
+    else if ("C" == grade) {
+        return 2.0;
+    }
+    else if ("C-" == grade) {
+        return 1.67;
+    }
+    else if ("D+" == grade) {
+        return 1.33;
+    }
+    else if ("D" == grade) {
+        return 1.0;
+    }
+    else if ("D-" == grade) {
+        return 0.67;
+    }
+    else if ("F" == grade) {
+        return 0.0;
+    }
+    else {
+        
+        return Invalid;
+    }
+}
+</script>
+<!-- <link href="~/Building-Blocks-gh-pages/util.css" rel="stylesheet" type="text/css"/>
+<link href="~/Building-Blocks-gh-pages/fonts.css" rel="stylesheet" type="text/css"/>
+<link href="~/Building-Blocks-gh-pages/style/headers.css" rel="stylesheet" type="text/css"/>
+<script src="~Scripts/jquery-2.0.3.js" type="text/javascript"></script> -->
+</head>
+<body style="color:white;font-size:16px;" >
+
+    <h3>GPA Calculator</h3>
+
+
+
+<form name="classes" method="post" onSubmit="updateCreditsGpa(); return false">
+<table align="center">
+<tbody id="classes_tbody" align="center">
+<tr>
+<th align="center">Subjects</th><th align="center">Credits</th><th align="center">Letter Grade</th>
+</tr>
+<tr>
+<td><input size="9" value="Subject 1" onChange="updateCreditsGpa()"></td>
+<td><input size="9" onChange="updateCreditsGpa()"></td>
+<td><input size="9" onChange="updateCreditsGpa()"></td>
+</tr>
+<tr>
+<td><input size="9" value="Subject 2" onChange="updateCreditsGpa()"></td>
+<td><input size="9" onChange="updateCreditsGpa()"></td>
+<td><input size="9" onChange="updateCreditsGpa()"></td>
+</tr>
+<tr>
+<td><input size="9" value="Subject 3" onChange="updateCreditsGpa()"></td>
+<td><input size="9" onChange="updateCreditsGpa()"></td>
+<td><input size="9" onChange="updateCreditsGpa()"></td>
+</tr>
+<tr>
+<td><input size="9" value="Subject 4" onChange="updateCreditsGpa()"></td>
+<td><input size="9" onChange="updateCreditsGpa()"></td>
+<td><input size="9" onChange="updateCreditsGpa()"></td>
+</tr>
+<tr>
+<td><input size="9" value="Subject 5" onChange="updateCreditsGpa()"></td>
+<td><input size="9" onChange="updateCreditsGpa()"></td>
+<td><input size="9" onChange="updateCreditsGpa()"></td>
+</tr>
+</tbody>
+</table>
+</form>
+
+<script language="JavaScript">
+if (document.createElement) {
+    document.writeln('<form><input type="button" value="Add Subject" onClick="addNewClass()"></form>');
+}
+</script>
+
+<form name="results" method="post" onSubmit="return false">
+<table border="0" width="320" align="right">
+<tr>
+    <td>Total Credits: <input name="total_credits" size="10"></td>
+</tr>
+<tr>
+<td> &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspGPA: <input name="gpa" size="10"></td>
+</tr>
+<tr>
+<td></td>
+</tr>
+<tr>
+<td ><input type="button" value="Calculate my GPA" onClick="updateCreditsGpa()"></td>
+
+</tr>
+<tr><td> <br></tr>
+</table>
+ </form>
+ 
+
+<div id="header"><div id="header-content">
+
+<a href="welcome.html"> Main Menu</a>
+</div></div>
+
+
+
+
+</body>
+</html>
